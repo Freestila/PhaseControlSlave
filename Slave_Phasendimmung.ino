@@ -1,5 +1,50 @@
-#include <lib_phase_cntrl.h>
+/**
 
+Uses a simple Arduino or ATMEGA8 with Arduino Bootloader to work as a
+Dimmer using phase angle controlling ( Phasenanschnittsdimmung).
+
+***************************************************************************
+ This program is free software; you can redistribute it and/or 
+ modify it under the terms of the GNU General Public License 
+ as published by the Free Software Foundation; either version2 of 
+ the License, or (at your option) any later version. 
+
+ This program is distributed in the hope that it will be useful, 
+ but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ General Public License for more details. 
+
+ If you have no copy of the GNU General Public License, write to the 
+ Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
+
+ For other license models, please contact the author.
+
+
+
+***************************************************************************
+
+Overview over used Ports:
+marked with stars: Used.
+
+        	            |----------------|
+		        ----| 1     U      28|----		A5 /SCL
+Serial  D0 / RX	  ***	----| 2		   27|----		A4 /SDA 
+Serial  D1 / TX   ***	----| 3		   26|----		A3 
+        D2 / INT0	----| 4		   25|----		A2  
+        D3 / INT1	----| 5		   24|----		A1  
+        D4   		----| 6		   23|----		A0  
+	          VCC	----| 7		   22|---- GND	 
+	          GND	----| 8		   21|---- VCC	
+	        	----| 9		   20|---- VCC
+        		----| 10	   19|----		D13 /SCK
+DF[0]   D5 	***	----| 11	   18|----		D12 /MISO
+DF[1]   D6 	***	----| 12	   17|----		D11 /MOSI 
+DF[2]   D7 	***	----| 13	   16|----		D10 /SS 
+DF[3]   D8 	***	----| 14	   15|----	***	D9         DF[4]
+		            |----------------|
+**/
+
+#include <lib_phase_cntrl.h>
 #include <Arduino.h>
 #include <EasyTransfer.h>
 
@@ -16,10 +61,6 @@ struct RECEIVE_DATA_STRUCTURE{
 EasyTransfer ET; 
 RECEIVE_DATA_STRUCTURE mydata;
 
-const int analogInPin = A0;  // Analog input pin that the potentiometer is attached to
-//const int analogOutPin = 9; // Analog output pin that the LED is attached to
-int sensorValue = 0;        // value read from the pot
-int outputValue = 0;
 
 
 void setup(){
@@ -29,16 +70,11 @@ void setup(){
   cli();
 
   init_phase_cntrl();
-  DimmerField[0]=0;
-  DimmerField[1]= 0;
-  DimmerField[2]= 255;				//some fixed vals for output
-  DimmerField[3]= 255;				//ch0,1 are captured from DIPs
+  DimmerField[0]= 255;
+  DimmerField[1]= 255;
+  DimmerField[2]= 255;				
+  DimmerField[3]= 255;				
   DimmerField[4]= 255;
-  // DimmerField[5]= 150;
-  //DimmerField[6]= 200;
-  //DimmerField[7]= 255;
-
-
 
   sei();
 }
